@@ -8,9 +8,9 @@ import threading
 
 # Daftar huruf hijaiyah
 huruf_hijaiyah = [
-    'alif', 'ba', 'ta', 'tsa', 'jim', 'ha', 'kha', 'dal', 'dzal', 'ra', 
+    'alif', 'ba', 'ta', 'tsa', 'jim', 'hah', 'kha', 'dal', 'dzal', 'ra', 
     'zay', 'sin', 'shin', 'sad', 'dad', 'tah', 'zah', 'ain', 'ghain', 
-    'fa', 'qaf', 'kaf', 'lam', 'mim', 'nun', 'ha', 'waw', 'ya'
+    'fa', 'qaf', 'kaf', 'lam', 'mim', 'nun', 'Ha', 'waw', 'ya'
 ]
 
 # Kondisi suara
