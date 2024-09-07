@@ -22,6 +22,7 @@ class AplikasiRecord:
         self.master.title("Aplikasi Record Huruf Hijaiyah")
         self.master.geometry("800x600")
 
+        self.nama_pengguna = tk.StringVar()
         self.huruf_terpilih = tk.StringVar()
         self.kondisi_terpilih = tk.StringVar()
         self.is_recording = False
@@ -32,6 +33,12 @@ class AplikasiRecord:
         self.create_widgets()
 
     def create_widgets(self):
+        # Frame untuk nama pengguna
+        nama_frame = ttk.Frame(self.master)
+        nama_frame.pack(pady=10)
+        ttk.Label(nama_frame, text="Nama:").pack(side=tk.LEFT, padx=5)
+        ttk.Entry(nama_frame, textvariable=self.nama_pengguna).pack(side=tk.LEFT, padx=5)
+
         # Frame untuk huruf hijaiyah
         huruf_frame = ttk.Frame(self.master)
         huruf_frame.pack(pady=10)
@@ -67,8 +74,8 @@ class AplikasiRecord:
             self.stop_recording()
 
     def start_recording(self):
-        if not self.huruf_terpilih.get() or not self.kondisi_terpilih.get():
-            print("Error, Pilih huruf dan kondisi terlebih dahulu!")
+        if not self.nama_pengguna.get() or not self.huruf_terpilih.get() or not self.kondisi_terpilih.get():
+            print("Error, Isi nama, pilih huruf dan kondisi terlebih dahulu!")
             return
 
         self.is_recording = True
@@ -95,7 +102,7 @@ class AplikasiRecord:
         self.is_recording = False
         self.record_button.config(text="Record")
 
-        filename = f"{self.huruf_terpilih.get()}_{self.kondisi_terpilih.get()}.wav"
+        filename = f"{self.nama_pengguna.get()}_{self.huruf_terpilih.get()}_{self.kondisi_terpilih.get()}.wav"
         filepath = os.path.join(r"E:/Contoh Dataset Skripsi/Record_Mentah", filename)
 
         wf = wave.open(filepath, 'wb')
