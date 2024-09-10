@@ -21,6 +21,13 @@ print(f"Jumlah isian: {len(daftar_huruf_kondisi)}")
 # Path sumber file audio
 source_path = os.path.join(os.getcwd(), "Record_Mentah")
 
+for folder in ['Record_Mentah']:
+    try:
+        os.mkdir(folder)
+        print(f"Folder {folder} berhasil dibuat")
+    except FileExistsError:
+        print(f"Folder {folder} sudah ada")
+
 # Membuat 84 folder dan memindahkan file yang sesuai
 for i, nama_folder in enumerate(daftar_huruf_kondisi, start=1):
     folder_name = f"{i:02d}. {nama_folder}"
