@@ -103,7 +103,7 @@ class AplikasiRecord:
         self.record_button.config(text="Record")
 
         filename = f"{self.nama_pengguna.get()}_{self.huruf_terpilih.get()}_{self.kondisi_terpilih.get()}.wav"
-        filepath = os.path.join(r"E:/Contoh Dataset Skripsi/Record_Mentah", filename)
+        filepath = os.path.join(r"E:/Contoh Dataset Skripsi/Dataset_Record_Baru/Record_Mentah", filename)
 
         wf = wave.open(filepath, 'wb')
         wf.setnchannels(1)
