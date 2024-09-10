@@ -19,7 +19,7 @@ print(daftar_huruf_kondisi)
 print(f"Jumlah isian: {len(daftar_huruf_kondisi)}")
 
 # Path sumber file audio
-source_path = r"E:/Contoh Dataset Skripsi/Dataset_Record_Baru/Record_Mentah_Dikumpulkan"
+source_path = os.path.join(os.getcwd(), "Record_Mentah")
 
 # Membuat 84 folder dan memindahkan file yang sesuai
 for i, nama_folder in enumerate(daftar_huruf_kondisi, start=1):

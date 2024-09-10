@@ -13,6 +13,14 @@ huruf_hijaiyah = [
     'fa', 'qaf', 'kaf', 'lam', 'mim', 'nun', 'Ha', 'waw', 'ya'
 ]
 
+# Daftar huruf hijaiyah dengan font Arab
+huruf_hijaiyah_arab = [
+    'ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر',
+    'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ',
+    'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي'
+]
+
+
 # Kondisi suara
 kondisi = ['fathah', 'kasroh', 'dommah']
 
@@ -30,6 +38,9 @@ class AplikasiRecord:
         self.frames = []
         self.start_time = 0
 
+        self.huruf_buttons = {}
+        self.kondisi_buttons = {}
+
         self.create_widgets()
 
     def create_widgets(self):
@@ -43,15 +54,19 @@ class AplikasiRecord:
         huruf_frame = ttk.Frame(self.master)
         huruf_frame.pack(pady=10)
 
-        for i, huruf in enumerate(huruf_hijaiyah):
-            ttk.Button(huruf_frame, text=huruf, command=lambda h=huruf: self.pilih_huruf(h)).grid(row=i//7, column=i%7, padx=5, pady=5)
+        for i, (huruf, huruf_arab) in enumerate(zip(huruf_hijaiyah, huruf_hijaiyah_arab)):
+            button = ttk.Button(huruf_frame, text=f"{huruf}\n {huruf_arab}", command=lambda h=huruf: self.pilih_huruf(h))
+            button.grid(row=i//7, column=i%7, padx=5, pady=5)
+            self.huruf_buttons[huruf] = button
 
         # Frame untuk kondisi
         kondisi_frame = ttk.Frame(self.master)
         kondisi_frame.pack(pady=10)
 
         for k in kondisi:
-            ttk.Button(kondisi_frame, text=k, command=lambda c=k: self.pilih_kondisi(c)).pack(side=tk.LEFT, padx=5)
+            button = ttk.Button(kondisi_frame, text=k, command=lambda c=k: self.pilih_kondisi(c))
+            button.pack(side=tk.LEFT, padx=5)
+            self.kondisi_buttons[k] = button
 
         # Tombol Record
         self.record_button = ttk.Button(self.master, text="Record", command=self.toggle_record)
@@ -62,10 +77,22 @@ class AplikasiRecord:
         self.time_label.pack(pady=5)
 
     def pilih_huruf(self, huruf):
-        self.huruf_terpilih.set(huruf)
+        if not self.is_recording:
+            self.huruf_terpilih.set(huruf)
+            for h, button in self.huruf_buttons.items():
+                if h == huruf:
+                    button.configure(style='Selected.TButton')
+                else:
+                    button.configure(style='TButton')
 
     def pilih_kondisi(self, kondisi):
-        self.kondisi_terpilih.set(kondisi)
+        if not self.is_recording:
+            self.kondisi_terpilih.set(kondisi)
+            for k, button in self.kondisi_buttons.items():
+                if k == kondisi:
+                    button.configure(style='Selected.TButton')
+                else:
+                    button.configure(style='TButton')
 
     def toggle_record(self):
         if not self.is_recording:
@@ -82,6 +109,12 @@ class AplikasiRecord:
         self.record_button.config(text="Stop")
         self.frames = []
         self.start_time = time.time()
+
+        # Menonaktifkan tombol huruf dan kondisi
+        for button in self.huruf_buttons.values():
+            button.config(state='disabled')
+        for button in self.kondisi_buttons.values():
+            button.config(state='disabled')
 
         threading.Thread(target=self.record_audio, daemon=True).start()
         self.update_time()
@@ -102,8 +135,16 @@ class AplikasiRecord:
         self.is_recording = False
         self.record_button.config(text="Record")
 
+        # Mengaktifkan kembali tombol huruf dan kondisi
+        for button in self.huruf_buttons.values():
+            button.config(state='normal')
+        for button in self.kondisi_buttons.values():
+            button.config(state='normal')
+
         filename = f"{self.nama_pengguna.get()}_{self.huruf_terpilih.get()}_{self.kondisi_terpilih.get()}.wav"
-        filepath = os.path.join(r"E:/Contoh Dataset Skripsi/Dataset_Record_Baru/Record_Mentah", filename)
+        record_mentah_dir = os.path.join(os.getcwd(), "Record_Mentah")
+        os.makedirs(record_mentah_dir, exist_ok=True)
+        filepath = os.path.join(record_mentah_dir, filename)
 
         wf = wave.open(filepath, 'wb')
         wf.setnchannels(1)
@@ -125,5 +166,8 @@ class AplikasiRecord:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    style = ttk.Style()
+    style.configure('TButton', font=('Times New Roman', 11))
+    style.configure('Selected.TButton', background='#90EE90', font=('Times New Roman', 11, 'bold'))
     app = AplikasiRecord(root)
     root.mainloop()

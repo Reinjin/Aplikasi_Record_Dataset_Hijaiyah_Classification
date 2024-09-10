@@ -17,6 +17,14 @@ daftar_huruf_kondisi = [f"{huruf}_{k}" for huruf in huruf_hijaiyah for k in kond
 print(daftar_huruf_kondisi)
 print(f"Jumlah isian: {len(daftar_huruf_kondisi)}")
 
+# Membuat folder Record_Mentah dan Record_Mentah_Dikumpulkan
+for folder in ['Record_Mentah']:
+    try:
+        os.mkdir(folder)
+        print(f"Folder {folder} berhasil dibuat")
+    except FileExistsError:
+        print(f"Folder {folder} sudah ada")
+
 # Membuat 84 folder kosong yang baru
 for i, nama_folder in enumerate(daftar_huruf_kondisi, start=1):
     nama_folder = f"{i:02d}. {nama_folder}"
