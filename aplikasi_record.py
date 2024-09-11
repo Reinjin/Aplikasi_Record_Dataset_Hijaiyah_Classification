@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import pyaudio
 import wave
 import os
 import time
 import threading
+
 
 from utils import huruf_hijaiyah as hh
 from utils import huruf_hijaiyah_arab as hja
@@ -97,7 +99,7 @@ class AplikasiRecord:
 
     def start_recording(self):
         if not self.nama_pengguna.get() or not self.huruf_terpilih.get() or not self.kondisi_terpilih.get():
-            print("Error, Isi nama, pilih huruf dan kondisi terlebih dahulu!")
+            messagebox.showerror("Error", "Isi nama, pilih huruf dan kondisi terlebih dahulu!")
             return
 
         self.is_recording = True
