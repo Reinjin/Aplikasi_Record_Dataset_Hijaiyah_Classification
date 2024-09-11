@@ -6,23 +6,18 @@ import os
 import time
 import threading
 
+from utils import huruf_hijaiyah as hh
+from utils import huruf_hijaiyah_arab as hja
+from utils import kondisi as ksi
+
 # Daftar huruf hijaiyah
-huruf_hijaiyah = [
-    'alif', 'ba', 'ta', 'tsa', 'jim', 'hah', 'kha', 'dal', 'dzal', 'ra', 
-    'zay', 'sin', 'shin', 'sad', 'dad', 'tah', 'zah', 'ain', 'ghain', 
-    'fa', 'qaf', 'kaf', 'lam', 'mim', 'nun', 'Ha', 'waw', 'ya'
-]
+huruf_hijaiyah = hh
 
 # Daftar huruf hijaiyah dengan font Arab
-huruf_hijaiyah_arab = [
-    'ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر',
-    'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ',
-    'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'ه', 'و', 'ي'
-]
-
+huruf_hijaiyah_arab = hja
 
 # Kondisi suara
-kondisi = ['fathah', 'kasroh', 'dommah']
+kondisi = ksi
 
 class AplikasiRecord:
     def __init__(self, master):

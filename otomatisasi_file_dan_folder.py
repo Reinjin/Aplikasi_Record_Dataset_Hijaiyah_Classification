@@ -1,15 +1,14 @@
 import os
 import shutil
 
+from utils import huruf_hijaiyah as hh
+from utils import kondisi as ksi
+
 # Daftar huruf hijaiyah
-huruf_hijaiyah = [
-    'alif', 'ba', 'ta', 'tsa', 'jim', 'hah', 'kha', 'dal', 'dzal', 'ra', 
-    'zay', 'sin', 'shin', 'sad', 'dad', 'tah', 'zah', 'ain', 'ghain', 
-    'fa', 'qaf', 'kaf', 'lam', 'mim', 'nun', 'Ha', 'waw', 'ya'
-]
+huruf_hijaiyah = hh
 
 # Kondisi suara
-kondisi = ['fathah', 'kasroh', 'dommah']
+kondisi = ksi
 
 # Membuat list untuk kombinasi huruf dan kondisi
 daftar_huruf_kondisi = [f"{huruf}_{k}" for huruf in huruf_hijaiyah for k in kondisi]
