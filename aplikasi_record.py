@@ -1,16 +1,19 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import simpledialog
+from tkinter.scrolledtext import ScrolledText
 import pyaudio
 import wave
 import os
 import time
 import threading
 
-
 from utils import huruf_hijaiyah as hh
 from utils import huruf_hijaiyah_arab as hja
 from utils import kondisi as ksi
+
+from otomatisasi_file_dan_folder import create_folder_and_move_file
 
 # Daftar huruf hijaiyah
 huruf_hijaiyah = hh
@@ -26,6 +29,7 @@ class AplikasiRecord:
         self.master = master
         self.master.title("Aplikasi Record Huruf Hijaiyah")
         self.master.geometry("800x600")
+        self.master.resizable(False, False)  # Menonaktifkan perubahan ukuran jendela
 
         self.nama_pengguna = tk.StringVar()
         self.huruf_terpilih = tk.StringVar()
@@ -73,6 +77,14 @@ class AplikasiRecord:
         self.time_label = ttk.Label(self.master, text="00:00")
         self.time_label.pack(pady=5)
 
+        # Scroll layout kosong
+        self.scroll_layout = ScrolledText(self.master, width=75, height=10, state='disabled')
+        self.scroll_layout.pack(side=tk.LEFT, padx=(10, 0), pady=10)
+
+        # Tombol Sesuaikan
+        self.sesuaikan_button = ttk.Button(self.master, text="Sesuaikan File", command=self.confirm_sesuaikan, style='Red.TButton')
+        self.sesuaikan_button.pack(side=tk.RIGHT, padx=(10,30), pady=10)
+
     def pilih_huruf(self, huruf):
         if not self.is_recording:
             self.huruf_terpilih.set(huruf)
@@ -113,6 +125,9 @@ class AplikasiRecord:
         for button in self.kondisi_buttons.values():
             button.config(state='disabled')
 
+        # Menonaktifkan tombol Sesuaikan
+        self.sesuaikan_button.config(state='disabled')
+
         threading.Thread(target=self.record_audio, daemon=True).start()
         self.update_time()
 
@@ -137,9 +152,13 @@ class AplikasiRecord:
             button.config(state='normal')
         for button in self.kondisi_buttons.values():
             button.config(state='normal')
+        
+        # Mengaktifkan kembali tombol Sesuaikan
+        self.sesuaikan_button.config(state='normal')
 
         filename = f"{self.nama_pengguna.get()}_{self.huruf_terpilih.get()}_{self.kondisi_terpilih.get()}.wav"
-        record_mentah_dir = os.path.join(os.getcwd(), "Record_Mentah")
+        simpan_dir = "Record_Mentah"
+        record_mentah_dir = os.path.join(os.getcwd(), simpan_dir)
         os.makedirs(record_mentah_dir, exist_ok=True)
         filepath = os.path.join(record_mentah_dir, filename)
 
@@ -151,6 +170,8 @@ class AplikasiRecord:
         wf.close()
 
         print("Info", f"Rekaman disimpan: {filepath}")
+        message_save = f"Rekaman disimpan: {simpan_dir}/{filename}\n"
+        self.write_to_scroll_layout(message_save)
 
     def update_time(self):
         if self.is_recording:
@@ -161,10 +182,34 @@ class AplikasiRecord:
         else:
             self.time_label.config(text="00:00")
 
+    def sesuaikan(self):
+        #subprocess.run(["python", "otomatisasi_file_dan_folder.py"])
+        messages = create_folder_and_move_file()
+        for message in messages:
+            self.write_to_scroll_layout(message + '\n')
+
+    def write_to_scroll_layout(self, text):
+        self.scroll_layout.config(state='normal')
+        self.scroll_layout.insert(tk.END, text)
+        self.scroll_layout.see(tk.END)
+        self.scroll_layout.config(state='disabled')
+
+    def confirm_sesuaikan(self):
+        confirm = messagebox.askquestion("Konfirmasi", "Apakah Kamu Yakin Sudah melakukan pengecekan file record?")
+        if confirm == 'yes':
+            input_password = simpledialog.askstring("Konfirmasi", "Masukkan password untuk melanjutkan")
+            if input_password is None:
+                return
+            elif input_password == "YES":
+                self.sesuaikan()
+            else:
+                messagebox.showerror("Error", "Password salah!")
+
 if __name__ == "__main__":
     root = tk.Tk()
     style = ttk.Style()
     style.configure('TButton', font=('Times New Roman', 11))
     style.configure('Selected.TButton', background='#90EE90', font=('Times New Roman', 11, 'bold'))
+    style.configure('Red.TButton', background='red', font=('Times New Roman', 11, 'bold'))
     app = AplikasiRecord(root)
     root.mainloop()

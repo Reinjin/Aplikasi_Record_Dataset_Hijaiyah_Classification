@@ -1,7 +1,7 @@
 # Daftar huruf hijaiyah
 huruf_hijaiyah = [
     'alif', 'ba', 'ta', 'tsa', 'jim', 'hah', 'kha', 'dal', 'dzal', 'ra', 
-    'zay', 'sin', 'shin', 'sad', 'dad', 'tah', 'zah', 'ain', 'ghain', 
+    'zay', 'sin', 'shin', 'sad', 'dad', 'tah', 'zah', 'ain', 'ghaiin', 
     'fa', 'qaf', 'kaf', 'lam', 'mim', 'nun', 'Ha', 'waw', 'ya'
 ]
 
