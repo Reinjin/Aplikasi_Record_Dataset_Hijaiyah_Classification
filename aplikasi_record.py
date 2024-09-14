@@ -52,6 +52,8 @@ class AplikasiRecord:
         ttk.Entry(nama_frame, textvariable=self.nama_pengguna).pack(side=tk.LEFT, padx=5)
 
         # Frame untuk huruf hijaiyah
+        ttk.Separator(self.master, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=5)
+
         huruf_frame = ttk.Frame(self.master)
         huruf_frame.pack(pady=10)
 
@@ -60,7 +62,8 @@ class AplikasiRecord:
             button.grid(row=i//7, column=i%7, padx=5, pady=5)
             self.huruf_buttons[huruf] = button
 
-        # Frame untuk kondisi
+        # Frame untuk kondisi dengan garis pemisah di atas
+        ttk.Separator(self.master, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=5)
         kondisi_frame = ttk.Frame(self.master)
         kondisi_frame.pack(pady=10)
 
@@ -70,6 +73,7 @@ class AplikasiRecord:
             self.kondisi_buttons[k] = button
 
         # Tombol Record
+        ttk.Separator(self.master, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=5)
         self.record_button = ttk.Button(self.master, text="Record", command=self.toggle_record)
         self.record_button.pack(pady=10)
 
