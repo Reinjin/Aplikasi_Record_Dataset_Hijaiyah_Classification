@@ -138,7 +138,7 @@ class AplikasiRecord:
     def record_audio(self):
         # Menggunakan mic default sesuai OS
         default_input_device_index = self.audio.get_default_input_device_info()['index']
-        stream = self.audio.open(format=pyaudio.paInt16, channels=1, rate=44100, 
+        stream = self.audio.open(format=pyaudio.paInt16, channels=1, rate=16000, 
                                  input=True, frames_per_buffer=1024,
                                  input_device_index=default_input_device_index)
         while self.is_recording:
@@ -169,7 +169,7 @@ class AplikasiRecord:
         wf = wave.open(filepath, 'wb')
         wf.setnchannels(1)
         wf.setsampwidth(self.audio.get_sample_size(pyaudio.paInt16))
-        wf.setframerate(44100)
+        wf.setframerate(16000)
         wf.writeframes(b''.join(self.frames))
         wf.close()
 
