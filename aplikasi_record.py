@@ -72,10 +72,22 @@ class AplikasiRecord:
             button.pack(side=tk.LEFT, padx=5)
             self.kondisi_buttons[k] = button
 
-        # Tombol Record
+        # Frame untuk tombol navigasi dan record
         ttk.Separator(self.master, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=5)
-        self.record_button = ttk.Button(self.master, text="Record", command=self.toggle_record)
-        self.record_button.pack(pady=10)
+        nav_frame = ttk.Frame(self.master)
+        nav_frame.pack(pady=10)
+        
+        # Tombol Back
+        self.back_button = ttk.Button(nav_frame, text="Back", command=self.back_selection)
+        self.back_button.pack(side=tk.LEFT, padx=5)
+        
+        # Tombol Record
+        self.record_button = ttk.Button(nav_frame, text="Record", command=self.toggle_record)
+        self.record_button.pack(side=tk.LEFT, padx=5)
+        
+        # Tombol Next
+        self.next_button = ttk.Button(nav_frame, text="Next", command=self.next_selection)
+        self.next_button.pack(side=tk.LEFT, padx=5)
 
         # Label waktu
         self.time_label = ttk.Label(self.master, text="00:00")
@@ -88,6 +100,58 @@ class AplikasiRecord:
         # Tombol Sesuaikan
         self.sesuaikan_button = ttk.Button(self.master, text="Sesuaikan File", command=self.confirm_sesuaikan, style='Red.TButton')
         self.sesuaikan_button.pack(side=tk.RIGHT, padx=(10,30), pady=10)
+
+    def next_selection(self):
+        if not self.is_recording:
+            current_huruf = self.huruf_terpilih.get()
+            current_kondisi = self.kondisi_terpilih.get()
+            
+            if not current_huruf:
+                self.pilih_huruf(huruf_hijaiyah[0])
+                self.pilih_kondisi(kondisi[0])
+                return
+                
+            if not current_kondisi:
+                self.pilih_kondisi(kondisi[0])
+                return
+                
+            kondisi_idx = kondisi.index(current_kondisi)
+            if kondisi_idx < len(kondisi) - 1:
+                # Pindah ke kondisi berikutnya
+                self.pilih_kondisi(kondisi[kondisi_idx + 1])
+            else:
+                # Pindah ke huruf berikutnya dan reset kondisi ke fathah
+                huruf_idx = huruf_hijaiyah.index(current_huruf)
+                if huruf_idx < len(huruf_hijaiyah) - 1:
+                    self.pilih_huruf(huruf_hijaiyah[huruf_idx + 1])
+                    self.pilih_kondisi(kondisi[0])
+                else:
+                    # Jika sudah di huruf terakhir, kembali ke huruf pertama
+                    self.pilih_huruf(huruf_hijaiyah[0])
+                    self.pilih_kondisi(kondisi[0])
+
+    def back_selection(self):
+        if not self.is_recording:
+            current_huruf = self.huruf_terpilih.get()
+            current_kondisi = self.kondisi_terpilih.get()
+            
+            if not current_huruf or not current_kondisi:
+                return
+                
+            kondisi_idx = kondisi.index(current_kondisi)
+            if kondisi_idx > 0:
+                # Pindah ke kondisi sebelumnya
+                self.pilih_kondisi(kondisi[kondisi_idx - 1])
+            else:
+                # Pindah ke huruf sebelumnya dan set kondisi ke dhommah
+                huruf_idx = huruf_hijaiyah.index(current_huruf)
+                if huruf_idx > 0:
+                    self.pilih_huruf(huruf_hijaiyah[huruf_idx - 1])
+                    self.pilih_kondisi(kondisi[-1])
+                else:
+                    # Jika sudah di huruf pertama, pindah ke huruf terakhir
+                    self.pilih_huruf(huruf_hijaiyah[-1])
+                    self.pilih_kondisi(kondisi[-1])
 
     def pilih_huruf(self, huruf):
         if not self.is_recording:
@@ -129,8 +193,10 @@ class AplikasiRecord:
         for button in self.kondisi_buttons.values():
             button.config(state='disabled')
 
-        # Menonaktifkan tombol Sesuaikan
+        # Menonaktifkan tombol Sesuaikan dan navigasi
         self.sesuaikan_button.config(state='disabled')
+        self.next_button.config(state='disabled')
+        self.back_button.config(state='disabled')
 
         threading.Thread(target=self.record_audio, daemon=True).start()
         self.update_time()
@@ -157,8 +223,10 @@ class AplikasiRecord:
         for button in self.kondisi_buttons.values():
             button.config(state='normal')
         
-        # Mengaktifkan kembali tombol Sesuaikan
+        # Mengaktifkan kembali tombol Sesuaikan dan navigasi
         self.sesuaikan_button.config(state='normal')
+        self.next_button.config(state='normal')
+        self.back_button.config(state='normal')
 
         filename = f"{self.nama_pengguna.get()}_{self.huruf_terpilih.get()}_{self.kondisi_terpilih.get()}.wav"
         simpan_dir = "Record_Mentah"
