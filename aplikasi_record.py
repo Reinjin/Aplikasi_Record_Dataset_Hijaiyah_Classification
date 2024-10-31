@@ -42,6 +42,11 @@ class AplikasiRecord:
         self.huruf_buttons = {}
         self.kondisi_buttons = {}
 
+        # Bind keyboard events
+        self.master.bind('<Left>', lambda e: self.back_selection())
+        self.master.bind('<Right>', lambda e: self.next_selection())
+        self.master.bind('<Return>', lambda e: self.toggle_record())
+
         self.create_widgets()
 
     def create_widgets(self):
