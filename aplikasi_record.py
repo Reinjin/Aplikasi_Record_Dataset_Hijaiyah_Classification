@@ -46,8 +46,18 @@ class AplikasiRecord:
         self.master.bind('<Left>', lambda e: self.back_selection())
         self.master.bind('<Right>', lambda e: self.next_selection())
         self.master.bind('<Return>', lambda e: self.toggle_record())
+        self.master.bind('<space>', lambda e: self.space_handler())
 
         self.create_widgets()
+
+    def space_handler(self):
+        # Simulasi menekan Enter (stop rekam)
+        self.toggle_record()
+        # Setelah rekaman selesai, pindah ke selanjutnya
+        time.sleep(0.1)  # Delay 
+        self.next_selection()  # Pindah ke selanjutnya
+        time.sleep(0.1)  # Delay 
+        self.toggle_record()  # Lanjut rekaman
 
     def create_widgets(self):
         # Frame untuk nama pengguna
